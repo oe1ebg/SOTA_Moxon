@@ -29,5 +29,6 @@ jobs:
       bundle_name: Moxon_OE1EBG
       bundle_paths: >-
         README.md INSTRUCTIONS.md Moxon_OE1EBG.FCStd LICENSE.txt project.yml
+        .freecad_tools/config.yml TUNING.md notebooks img
       generated_paths: >-
         docs prints
