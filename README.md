@@ -7,7 +7,7 @@ by OE1EBG
 
 An interactive Jupyter notebook for Moxon rectangle dimensions and visualization is available at [`notebooks/interactive_moxon_calculator.ipynb`](notebooks/interactive_moxon_calculator.ipynb).
 
-The notebook includes the theory note from [`notebooks/moxon_theory.md`](notebooks/moxon_theory.md), presets for 2 m and 70 cm, conductor diameter and velocity factor controls, dimension tables, and scaled geometry plots.
+The notebook has presets for 2 m and 70 cm, conductor diameter and velocity factor controls, dimension tables, and scaled geometry plots. The theory note is [`notebooks/moxon_theory.md`](notebooks/moxon_theory.md), shown as its own page on the website.
 
 ## Tuning guide
 
