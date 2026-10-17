@@ -11,6 +11,7 @@ name: CI
 permissions:
   contents: read
   actions: read
+  pull-requests: read # paths-filter lists a PR's files through the API
 
 # A push to a branch with an open PR fires both "push" and "pull_request".
 # Group both under the branch name (head_ref for PRs, ref for plain pushes)
@@ -20,7 +21,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Run each job only when its inputs changed. Filtering per job (not with
+  # on.push.paths) keeps the workflow itself running, so a job skipped here
+  # still counts as passed for required checks. main always runs everything,
+  # so a skipped branch check can't hide a break that only shows after merge.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      cad: ${{ steps.scope.outputs.all == 'true' || steps.filter.outputs.cad == 'true' }}
+      notebooks: ${{ steps.scope.outputs.all == 'true' || steps.filter.outputs.notebooks == 'true' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Run scope
+        id: scope
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          all=false
+          [ "$REF" = refs/heads/main ] && all=true
+          echo "all=$all" >> "$GITHUB_OUTPUT"
+      - name: Changed parts
+        id: filter
+        if: steps.scope.outputs.all != 'true'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          # this workflow affects everything
+          filters: |
+            cad:
+              - '.github/workflows/commit.yml'
+              - '.freecad_tools/**'
+              - '**/*.FCStd'
+              - 'INSTRUCTIONS.md'
+            notebooks:
+              - '.github/workflows/commit.yml'
+              - 'notebooks/**'
+              - 'TUNING.md'
+              - 'pyproject.toml'
+              - 'uv.lock'
+
   build-artifacts-dry-run:
+    needs: changes
+    if: needs.changes.outputs.cad == 'true'
     uses: ebirn/freecad_tools/.github/workflows/reusable-build-3mf-artifacts.yml@main
     with:
       config_path: .freecad_tools/config.yml
@@ -30,6 +71,8 @@ jobs:
       artifact_glob: prints/** docs/**
 
   notebook-dry-run:
+    needs: changes
+    if: needs.changes.outputs.notebooks == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
