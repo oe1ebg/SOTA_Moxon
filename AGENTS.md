@@ -26,7 +26,7 @@ There is no test suite; the notebook dry run is the check.
 
 ## CAD export config
 
-`.freecad_tools/config.yml` defines the exports (print plates). Each lists bodies by FreeCAD **label** with position/rotation, the 3MF `output`, `keep_stl` + `stl_output_dir` (STLs are named `<stl_output_dir>/<export>_<body label>.stl`, spaces become `_`, repeated bodies get `_2`, ...), and a BOM. The same part has different labels in different exports (`Feed001`/`Feed`, `Cover001`/`Cover`); `project.yml` maps each label to a display name.
+`.freecad_tools/config.yml` defines the exports (print plates); there is one, the Back T kit (`Moxon_OE1EBG_BackT`: Feed, Cover, BackT). The earlier corner kit was dropped. Each export lists bodies with position/rotation, the 3MF `output`, and `keep_stl` + `stl_output_dir`. STLs are named `<stl_output_dir>/<export>_<body label>.stl` (spaces become `_`, repeated bodies get `_2`, ...) after the body's real FreeCAD **label**, so list bodies by label (`Feed001`, `Cover001`), not by another name, or the website won't find the file; `project.yml` maps each label to a display name. freecad_tools writes a `bom:` and a drawing only for exports that also have a `techdraw:` section, which the Back T export has not (no PDF or BOM in releases for now).
 
 ## Release bundle and the website contract
 

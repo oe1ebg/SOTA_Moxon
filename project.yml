@@ -31,15 +31,9 @@ sections:
       to zoom. The preview shows the geometry; use the downloaded files in
       your slicer.
     exports:
-      Moxon_OE1EBG_round:
-        title: Round corner kit
       Moxon_OE1EBG_BackT:
         title: Back T kit
     bodies:
-      # The corner export uses Feed001/Cover001, the BackT export Feed/Cover
       Feed001: {title: Feed point}
-      Feed: {title: Feed point}
       Cover001: {title: Feed point cover}
-      Cover: {title: Feed point cover}
-      Angle Round: {title: Round corner}
       BackT: {title: Back T}

@@ -1,40 +1,12 @@
 ---
 export:
-  - name: Moxon_OE1EBG_round
-    source: Moxon_OE1EBG.FCStd
-    # Can specify bodies by Name (Body) or Label (Feed001, Cover001, etc) - more user-friendly
-    bodies:
-      - Feed001           # Actual Label: Feed001 (Name: Body)
-      - body: Cover001          # Actual Label: Cover001 (Name: Body002)
-        rotation: [0, 180, 0]
-        position: [90, 90, 0]
-      - body: "Angle Round"     # Actual Label: Angle Round (Name: Body003)
-        position: [50, 0, 0]
-      - body: "Angle Round"     # Actual Label: Angle Round (Name: Body003)
-        position: [50, 50, 0]
-
-    # Optional: output filename (default: prints/{name}.3mf)
-    output: prints/Moxon_OE1EBG_corner.3mf
-    # Optional: template 3MF file with pre-configured printer settings
-    template: .freecad_tools/template_print_settings.3mf
-    # Keep generated STL files after creating 3MF (default: false)
-    keep_stl: true
-    # Directory to store STL files (only used if keep_stl is true)
-    stl_output_dir: prints/stl
-    techdraw_source: all
-    techdraw:
-      output_dir: docs
-      format: pdf
-      instructions: INSTRUCTIONS.md
-    bom:
-      source: assembly
-      output: docs/bom_corner.csv
   - name: Moxon_OE1EBG_BackT
     source: Moxon_OE1EBG.FCStd
-    # Can specify bodies by Name (Body) or Label (Feed001, Cover001, etc) - more user-friendly
+    # Can specify bodies by Name (Body) or Label (Feed001, Cover001, etc) - the
+    # STL files are named after the label, which the oe1ebg.at parts page relies on
     bodies:
-      - Feed           # Actual Label: Feed001 (Name: Body)
-      - body: Cover          # Actual Label: Cover001 (Name: Body002)
+      - Feed001           # Name: Body
+      - body: Cover001    # Name: Body002
         rotation: [0, 180, 0]
         position: [30, 30, 0]
       - body: "BackT"
@@ -47,9 +19,6 @@ export:
     keep_stl: true
     # Directory to store STL files (only used if keep_stl is true)
     stl_output_dir: prints/stl
-    bom:
-      source: assembly
-      output: docs/bom_backt.csv
 
 macros:
   variant_array_assignment:
