@@ -28,6 +28,6 @@ jobs:
       release_tag: ${{ github.event.inputs.release_tag || '' }}
       bundle_name: Moxon_OE1EBG
       bundle_paths: >-
-        README.md INSTRUCTIONS.md Moxon_OE1EBG.FCStd LICENSE.txt
+        README.md INSTRUCTIONS.md Moxon_OE1EBG.FCStd LICENSE.txt project.yml
       generated_paths: >-
         docs prints
