@@ -45,6 +45,8 @@ export:
     template: .freecad_tools/template_print_settings.3mf
     # Keep generated STL files after creating 3MF (default: false)
     keep_stl: true
+    # Directory to store STL files (only used if keep_stl is true)
+    stl_output_dir: prints/stl
     bom:
       source: assembly
       output: docs/bom_backt.csv
