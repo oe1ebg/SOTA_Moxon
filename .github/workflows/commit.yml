@@ -31,7 +31,7 @@ jobs:
 
   notebook-dry-run:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install uv
@@ -48,23 +48,22 @@ jobs:
         with:
           path: ~/.cache/matplotlib
           key: matplotlib-fontcache-${{ runner.os }}
-      # Execution time on shared GH-hosted runners varies wildly for this step
-      # (observed 4s-908s across otherwise-identical runs with a warm cache,
-      # occasionally exceeding even a 900s per-cell timeout) due to
-      # runner-to-runner CPU/noisy-neighbor variance, not anything in the
-      # notebooks themselves - confirmed by running the identical code
-      # natively (arm64 Linux via podman, exact uv.lock-pinned versions) in a
-      # consistent ~5s every time. Retry each notebook a few times rather than
-      # chase an ever-higher timeout; a run that's merely slow still succeeds
-      # on its first or second attempt in seconds.
+      # Executing a notebook intermittently stalls: one cell never gets its
+      # reply (or idle status) from the kernel and nbclient waits until the
+      # cell timeout. Reproduced locally in ~20% of runs (macOS arm64, also
+      # with Python 3.12, ipykernel 6.x and pyzmq 26), a different cell each
+      # time; typical cells take well under a second and a whole notebook
+      # about 2-5 s. A long cell timeout therefore only makes a stalled
+      # attempt expensive (15 min each at 900 s), so use a short one and
+      # retry: with 4 attempts at ~20% a notebook fails only ~0.2% of the time.
       - name: Execute notebooks
         run: |
           for f in notebooks/*.ipynb; do
             echo "::group::$f"
             attempt=1
-            max_attempts=3
+            max_attempts=4
             until uv run jupyter nbconvert --to notebook --execute \
-                --ExecutePreprocessor.timeout=900 \
+                --ExecutePreprocessor.timeout=60 \
                 --output-dir "$(mktemp -d)" "$f"
             do
               if [ "$attempt" -ge "$max_attempts" ]; then
